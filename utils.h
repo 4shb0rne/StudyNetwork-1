@@ -78,7 +78,7 @@ void PrintUser()
     int i = 1;
     while(head != NULL)
     {
-        printf("%2d     %s", i++, head->username);
+        printf("%2d     %s\n", i++, head->username);
         head = head->next;
     }
 }
@@ -98,4 +98,19 @@ void PrintFriends(char *username)
         head = head->next;
     }
 }
+void deleteFriend(char *username) 
+{ 
+    if (start == NULL) 
+    {
+        return; 
+    }
+    struct Friends* temp = start, *prev; 
+    while(temp != NULL && strcmp(temp->username, username) != 0)
+    {
+        prev = temp;
+        temp = temp->next;
+    }
+    prev->next = temp->next;
+    free(temp); 
+} 
 
