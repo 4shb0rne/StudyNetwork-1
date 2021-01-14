@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 struct Friends{
     char username[25];
     Friends *next;
@@ -41,9 +42,10 @@ void pushAcc(char *username, char *password) {
   if(!head) 
   { 
     head = tail = temp;
-  } else 
-  { 
-    tail->next = temp; 
+  }
+  else 
+  {
+    tail->next = temp;
     tail = temp; 
   }
 }
@@ -61,37 +63,43 @@ void pushFriends(char *username)
 }
 int CheckUsername(char *username)
 {
-    while(head != NULL)
+    Account *curr = head;
+
+    while(curr != NULL)
     {
-        if(strcmp(username, head->username) == 0)
+        if(strcmp(username, curr->username) == 0)
         {
             return 1; //barti ada yang sama
         }
-        head = head->next;
+        curr = curr->next;
     }
     return 0; // aman boleh dipake
 }
 int CheckLogin(char *username, char *password)
 {
-    while(head != NULL)
+    Account *curr = head;
+
+    while(curr != NULL)
     {
-        if(strcmp(username, head->username) == 0 && strcmp(password, head->password) == 0)
+        if(strcmp(username, curr->username) == 0 && strcmp(password, curr->password) == 0)
         {
             return 1; //barti ada yang sama
         }
-        head = head->next;
+        curr = curr->next;
     }
     return 0; // aman boleh dipake
 }
 void PrintUser()
 {
+    Account *curr = head;
+
     printf("[All User]\n");
     printf("No.     Username\n");
     int i = 1;
-    while(head != NULL)
+    while(curr != NULL)
     {
-        printf("%2d     %s\n", i++, head->username);
-        head = head->next;
+        printf("%2d     %s\n", i++, curr->username);
+        curr = curr->next;
     }
 }
 void PrintFriends(char *username)
@@ -125,4 +133,3 @@ void deleteFriend(char *username)
     prev->next = temp->next;
     free(temp); 
 } 
-

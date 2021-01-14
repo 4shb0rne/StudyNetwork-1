@@ -1,9 +1,17 @@
 #include "utils.h"
 
+char loggedIn[25];
+char loggedInTime[50];
+
 void mainMenu();
 void loginMenu();
 void regis();
 void login();
+void logout();
+
+void printLine(){
+    puts("----------------------------");
+}
 
 void header(){ // print heading
     puts("=============================================");
@@ -12,8 +20,12 @@ void header(){ // print heading
     puts("");
 }
 
-void printLine(){
-    puts("-----------------------");
+void welcome(const char *name){
+    puts("=============================================");
+    printf("Welcome, %s\n",name);
+    puts("=============================================");
+    printf("Logged in: %s",loggedInTime);
+    printLine();
 }
 
 void mainMenu(){
@@ -43,6 +55,48 @@ void mainMenu(){
         case 2: login(); break;
         case 3: return; break;
         case 0: return; break;
+        default: break;
+    }
+}
+
+void loginMenu(){
+
+    puts("=============================================");
+    printf("    Welcome, %s\n",loggedIn);
+    puts("=============================================");
+    puts("");
+
+    int menu = -1;
+    
+    do{
+        system("cls");
+        welcome(loggedIn); //tampilkan login header
+
+        printLine();
+        puts("         >> Menu <<         ");
+        printLine();
+
+        puts("[1] Add Friend");
+        puts("[2] Remove Friend");
+        puts("[3] View Inbox");
+        puts("[4] View Sent Request");
+        puts("[5] Add, Edit, Announce, Delete Note");
+        puts("[6] Logout");
+        printLine();
+        puts("Press 0 and enter to abort an operation");
+        printLine();
+        printf(">> ");
+        scanf("%d",&menu);
+    }while(menu < 0 || menu > 6);
+
+    switch(menu){
+        case 1: break;
+        case 2: break;
+        case 3: break;
+        case 4: break;
+        case 5: break;
+        case 6: logout(); break;
+        case 0: loginMenu(); break;
         default: break;
     }
 }
@@ -94,17 +148,27 @@ void login(){
             printf("Try again [ 1 = yes / 0 = no] ? ");
             scanf("%d",&temp); getchar();
             if(temp != 1){
+                strcpy(loggedIn, username);
                 mainMenu();
             }
         }
     }while(!CheckLogin(username,password));
 
+    time_t rawtime;
+    struct tm * timeinfo;
+
+    time ( &rawtime );
+    timeinfo = localtime ( &rawtime );
+    strcpy(loggedInTime,asctime (timeinfo));
+
     loginMenu();
     return;
 }
 
-void loginMenu(){
-    printf("ini menu login");
-    return;
+void logout(){
+    strcpy(loggedIn,"");
+    strcpy(loggedInTime,"");
+
+    mainMenu();
 }
 
