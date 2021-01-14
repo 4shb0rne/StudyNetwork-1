@@ -4,7 +4,7 @@
 struct Friends{
     char username[25];
     Friends *next;
-}*start;
+}*start, *end;
 struct Account{
     char username[25];
     char password[25];
@@ -24,7 +24,7 @@ Friends *createNode(char *username){
     temp->next = NULL;
     return temp;
 }
-void pushTail(char *username, char *password) {
+void pushAcc(char *username, char *password) {
   Account *temp = createNode(username, password);
   if(!head) 
   { 
@@ -34,6 +34,18 @@ void pushTail(char *username, char *password) {
     tail->next = temp; 
     tail = temp; 
   }
+}
+void pushFriends(char *username)
+{
+    Friends *temp = createNode(username);
+    if(!head) 
+    { 
+        start = end = temp;
+    } else 
+    { 
+        end->next = temp; 
+        end = temp; 
+    }
 }
 int CheckUsername(char *username)
 {
@@ -58,6 +70,17 @@ int CheckPassword(char *password)
         head = head->next;
     }
     return 0; // aman boleh dipake
+}
+void PrintUser()
+{
+    printf("[All User]\n");
+    printf("No.     Username\n");
+    int i = 1;
+    while(head != NULL)
+    {
+        printf("%2d     %s", i++, head->username);
+        head = head->next;
+    }
 }
 void PrintFriends(char *username)
 {
