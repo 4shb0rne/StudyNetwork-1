@@ -16,12 +16,6 @@ void printLine(){
     puts("-----------------------");
 }
 
-void allUser(){ // print all users
-    puts("[All User]");
-    puts("No.     Username");
-    printLine();
-}
-
 void mainMenu(){
 
     int menu = -1;
@@ -29,7 +23,10 @@ void mainMenu(){
     do{
         system("cls");
         header();
-        allUser();
+        PrintUser();
+
+        puts("");
+        printLine();
 
         puts("[1] Register");
         puts("[2] Login");
