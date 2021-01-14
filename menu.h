@@ -59,8 +59,8 @@ void regis(){
         printf("Please type in your password [lowercase || 1..24]: ");
         scanf("%s",password); getchar();
 
-        if(!CheckUsername(username)){
-            int temp;
+        if(CheckUsername(username)){ // if username exists
+            int temp = 0;
             puts("Username already used");
             printf("Try again [ 1 = yes / 0 = no] ? ");
             scanf("%d",&temp); getchar();
@@ -68,7 +68,9 @@ void regis(){
                 mainMenu();
             }
         }
-    }while(!CheckUsername(username));
+    }while(CheckUsername(username));
+
+    pushAcc(username,password);
 
     puts("");
     puts("--- Registration Successful ---");
@@ -89,7 +91,7 @@ void login(){
 
         //VALIDATE USERNAME PASSWORD
 
-        if(!CheckPassword(username,password)){
+        if(!CheckLogin(username,password)){
             int temp;
             puts("Invalid username or password");
             printf("Try again [ 1 = yes / 0 = no] ? ");
@@ -98,8 +100,14 @@ void login(){
                 mainMenu();
             }
         }
-    }while(!CheckPassword(username,password));
+    }while(!CheckLogin(username,password));
 
     loginMenu();
+    return;
+}
+
+void loginMenu(){
+    printf("ini menu login");
+    return;
 }
 

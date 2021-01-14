@@ -15,7 +15,7 @@ struct Notes{
     char note[256];
     int privatecheck; // 1 = public , 0 = private
     Notes *next;
-} *head;
+} *head1;
 Notes *createNote(char *note)
 {
     Notes *temp = (Notes*)malloc(sizeof(Notes));
