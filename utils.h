@@ -11,21 +11,33 @@ struct Account{
     Friends *start;
     Account *next;
 } *head, *tail, *curr;
-Account *createNode(char *username, char *password){
+struct Notes{
+    char note[256];
+    int privatecheck; // 1 = public , 0 = private
+    Notes *next;
+} *head;
+Notes *createNote(char *note)
+{
+    Notes *temp = (Notes*)malloc(sizeof(Notes));
+    strcpy(temp->note, note);
+    temp->next = NULL;
+    return temp;
+}
+Account *createAcc(char *username, char *password){
     Account *temp = (Account*)malloc(sizeof(Account));
     strcpy(temp->username , username);
     strcpy(temp->password , password);
     temp->next = NULL;
     return temp;
 }
-Friends *createNode(char *username){
+Friends *createFriend(char *username){
     Friends *temp = (Friends*)malloc(sizeof(Friends));
     strcpy(temp->username , username);
     temp->next = NULL;
     return temp;
 }
 void pushAcc(char *username, char *password) {
-  Account *temp = createNode(username, password);
+  Account *temp = createAcc(username, password);
   if(!head) 
   { 
     head = tail = temp;
@@ -37,7 +49,7 @@ void pushAcc(char *username, char *password) {
 }
 void pushFriends(char *username)
 {
-    Friends *temp = createNode(username);
+    Friends *temp = createFriend(username);
     if(!head) 
     { 
         start = end = temp;
@@ -59,11 +71,11 @@ int CheckUsername(char *username)
     }
     return 0; // aman boleh dipake
 }
-int CheckPassword(char *password)
+int CheckLogin(char *username, char *password)
 {
     while(head != NULL)
     {
-        if(strcmp(password, head->password) == 0)
+        if(strcmp(username, head->username) == 0 && strcmp(password, head->password) == 0)
         {
             return 1; //barti ada yang sama
         }
