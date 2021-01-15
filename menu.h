@@ -1,5 +1,10 @@
-#include "utils.h"
+// ARROW KEYS
+#define up 72
+#define down 80
+#define left 75
+#define right 77
 
+// Global variables
 char loggedIn[25]; // user who is currently logged in
 char loggedInTime[50]; // the time the user log in
 
@@ -11,6 +16,10 @@ void logout();
 void addFriend();
 void viewInbox();
 void viewSent();
+
+void dashboard();
+void publicNotes();
+void yourPost();
 
 void printLine(){
     puts("----------------------------");
@@ -29,6 +38,12 @@ void welcome(const char *name){
     puts("=============================================");
     printf("Logged in: %s",loggedInTime);
     printLine();
+}
+
+void title(const char *text){
+    puts("=============================================");
+    printf("         %s",text);
+    puts("=============================================");
 }
 
 void mainMenu(){
@@ -98,7 +113,7 @@ void loginMenu(){
         case 2: break;
         case 3: viewInbox(); break;
         case 4: viewSent(); break;
-        case 5: break;
+        case 5: dashboard(); break;
         case 6: logout(); break;
         case 0: loginMenu(); break;
         default: break;
@@ -240,5 +255,96 @@ void viewSent(){
     getchar();
 
     loginMenu();
+}
+
+// ####################################### DASHBOARD ####################################### //
+
+void dashboard(){
+
+    int menu = -1;
+    do{
+        system("cls");
+        title("DASHBOARD");
+        puts("");
+        puts("[1] Public Posts");
+        puts("[2] Your Posts");
+        puts("[3] Create Post");
+        puts("[4] Back");
+        printf(">> ");
+
+        scanf("%d",&menu);
+
+    }while(menu < 0 && menu > 4);
+
+    switch(menu){
+        case 1: publicNotes(); break;
+        case 2: yourPost(); break;
+        case 3: break;
+        case 4: loginMenu(); break;
+    }
+}
+
+void publicNotes(){
+    int page = 1;
+    char key;
+    
+    while(1){
+
+        system("cls");
+        title("PUBLIC POSTS");
+        puts("");
+        puts("[Notes]");
+
+        // PrintNotes(page);
+
+        puts("[C] Add Comment");
+        puts("[V] View Comment");
+        puts("[X] Back to Dashboard");
+
+        while(kbhit()){
+            key = getch();
+
+            if(key==left){
+                //puts("LEFT KEY PRESSED");
+                if(page > 1) page--;
+            }else if(key==right){
+                // puts("RIGHT KEY PRESSED");
+                page++;
+            }
+        }
+    }
+}
+
+void yourPost(){
+    int page = 1;
+    char key;
+    
+    while(1){
+
+        system("cls");
+        title("PUBLIC POSTS");
+        puts("");
+        puts("[Notes]");
+
+        // PrintPostBy(loggedIn);
+
+        puts("[C] Add Comment");
+        puts("[V] View Comment");
+        puts("[E] Edit Post");
+        puts("[D] Delete Post");
+        puts("[X] Back to Dashboard");
+
+        while(kbhit()){
+            key = getch();
+
+            if(key==left){
+                //puts("LEFT KEY PRESSED");
+                if(page > 1) page--;
+            }else if(key==right){
+                // puts("RIGHT KEY PRESSED");
+                page++;
+            }
+        }
+    }
 }
 

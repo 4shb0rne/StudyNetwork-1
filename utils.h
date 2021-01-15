@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <time.h>
+#include <conio.h>
 
 // #################################### INITIALIZE STRUCT ####################################
 struct Friends{
@@ -16,34 +18,40 @@ struct Sents{
     char username[25];
     Sents *next;
 };
+struct Comments{
+    char username[25];
+    char comment[256];
+    int likes;
+    Comments *next;
+};
+struct Notes{
+    char notes[256];
+    char category[20];
+    int announced; // 1 = yes, 0 = no
+    int privatecheck; // 1 = public , 0 = private
+    Comments *cmntHead;
+    Notes *next;
+};
 struct Account{
     char username[25];
     char password[25];
     Friends *friendHead;
     Requests *reqHead;
     Sents *sentHead;
+    Notes *noteHead;
     Account *next;
 } *head, *tail, *curr;
-struct Notes{
-    char note[256];
-    int privatecheck; // 1 = public , 0 = private
-    Notes *next;
-} *head1;
+
 
 // #################################### CREATE NODES ####################################
-Notes *createNote(char *note)
-{
-    Notes *temp = (Notes*)malloc(sizeof(Notes));
-    strcpy(temp->note, note);
-    temp->next = NULL;
-    return temp;
-}
+
 Account *createAcc(char *username, char *password){
     Account *temp = (Account*)malloc(sizeof(Account));
     strcpy(temp->username , username);
     strcpy(temp->password , password);
     temp->reqHead = NULL;
     temp->sentHead = NULL;
+    temp->noteHead = NULL;
     temp->next = NULL;
     return temp;
 }
@@ -62,6 +70,22 @@ Requests *createRequest(char *username){
 Sents *createSent(char *username){
     Sents *temp = (Sents*)malloc(sizeof(Sents));
     strcpy(temp->username , username);
+    temp->next = NULL;
+    return temp;
+}
+Comments *createComment(char *username, char *comment, int likes){
+    Comments *temp = (Comments*)malloc(sizeof(Comments));
+    strcpy(temp->comment , comment);
+    temp->likes = likes;
+    temp->next = NULL;
+}
+Notes *createNote(char *notes, char *category, int announced, int privatecheck){
+    Notes *temp = (Notes*)malloc(sizeof(Notes));
+    strcpy(temp->notes, notes);
+    strcpy(temp->category, category);
+    temp->announced = announced;
+    temp->privatecheck = privatecheck;
+    temp->cmntHead = NULL;
     temp->next = NULL;
     return temp;
 }

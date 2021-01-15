@@ -1,3 +1,4 @@
+#include "utils.h"
 #include "menu.h"
 
 int main(){
