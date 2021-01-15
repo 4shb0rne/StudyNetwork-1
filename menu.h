@@ -89,7 +89,7 @@ void loginMenu(){
         puts("Press 0 and enter to abort an operation");
         printLine();
         printf(">> ");
-        scanf("%d",&menu);
+        scanf("%d",&menu); getchar();
     }while(menu < 0 || menu > 6);
         printLine();
 
@@ -206,7 +206,7 @@ void viewInbox(){
     puts("");
     PrintRequest(loggedIn);
     puts("");
-    
+
     do{
         puts("Which user do you want to accept? [0 to go back]");
         printf(">> ");
@@ -218,6 +218,7 @@ void viewInbox(){
     }while(!CheckRequest(username, loggedIn) && strcmp(username,"0")!=0 && strcmp(username,loggedIn)!=0);
 
     if(CheckRequest(username,loggedIn)){
+
         pushFriends(username, loggedIn);
 
         puts("");
@@ -230,6 +231,14 @@ void viewInbox(){
 }
 
 void viewSent(){
-    return;
+
+    puts("");
+    PrintSent(loggedIn);
+    puts("");
+        
+    printf("Press enter to go back");
+    getchar();
+
+    loginMenu();
 }
 

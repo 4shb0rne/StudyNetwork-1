@@ -7,16 +7,21 @@
 struct Friends{
     char username[25];
     Friends *next;
-} *friendHead, *friendTail;
+};
 struct Requests{
     char username[25];
     Requests *next;
+};
+struct Sents{
+    char username[25];
+    Sents *next;
 };
 struct Account{
     char username[25];
     char password[25];
     Friends *friendHead;
     Requests *reqHead;
+    Sents *sentHead;
     Account *next;
 } *head, *tail, *curr;
 struct Notes{
@@ -38,6 +43,7 @@ Account *createAcc(char *username, char *password){
     strcpy(temp->username , username);
     strcpy(temp->password , password);
     temp->reqHead = NULL;
+    temp->sentHead = NULL;
     temp->next = NULL;
     return temp;
 }
@@ -49,6 +55,12 @@ Friends *createFriend(char *username){
 }
 Requests *createRequest(char *username){
     Requests *temp = (Requests*)malloc(sizeof(Requests));
+    strcpy(temp->username , username);
+    temp->next = NULL;
+    return temp;
+}
+Sents *createSent(char *username){
+    Sents *temp = (Sents*)malloc(sizeof(Sents));
     strcpy(temp->username , username);
     temp->next = NULL;
     return temp;
@@ -94,6 +106,26 @@ void PrintRequest(char *username){
     {
         if(strcmp(username, curr->username) == 0){
         Requests *curr2 = curr->reqHead;
+            int i=1;
+            while(curr2){
+                printf("%2d     %s\n", i++, curr2->username);
+                curr2 = curr2->next;
+            }
+            return;
+        }
+        curr = curr->next;
+    }
+}
+void PrintSent(char *username){
+    Account *curr = head;
+
+    puts("[Friend Requests sent by you]");
+    puts("No.     Username");
+
+    while(curr)
+    {
+        if(strcmp(username, curr->username) == 0){
+        Sents *curr2 = curr->sentHead;
             int i=1;
             while(curr2){
                 printf("%2d     %s\n", i++, curr2->username);
@@ -184,6 +216,17 @@ void pushRequest(char *sender, char *receiver){
                 curr->reqHead = temp;
             }
         }
+
+        if(strcmp(sender, curr->username) == 0){
+            Sents *temp2 = createSent(receiver);
+
+            if(!curr->sentHead) {  // ini push head
+                curr->sentHead = temp2;
+            } else { 
+                temp2->next = curr->sentHead;
+                curr->sentHead = temp2;
+            }
+        }
         curr = curr->next;
     }
 }
@@ -211,19 +254,19 @@ void pushFriends(char *sender, char *receiver)
     }
 }
 
-void deleteFriend(char *username) 
-{ 
-    if (friendHead == NULL) 
-    {
-        return; 
-    }
-    struct Friends* temp = friendHead, *prev; 
-    while(temp != NULL && strcmp(temp->username, username) != 0)
-    {
-        prev = temp;
-        temp = temp->next;
-    }
-    prev->next = temp->next;
-    free(temp); 
-}
+// void deleteFriend(char *username) 
+// { 
+//     if (friendHead == NULL) 
+//     {
+//         return; 
+//     }
+//     struct Friends* temp = friendHead, *prev; 
+//     while(temp != NULL && strcmp(temp->username, username) != 0)
+//     {
+//         prev = temp;
+//         temp = temp->next;
+//     }
+//     prev->next = temp->next;
+//     free(temp); 
+// }
 
