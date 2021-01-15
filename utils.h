@@ -2,14 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
+// #################################### INITIALIZE STRUCT ####################################
 struct Friends{
     char username[25];
     Friends *next;
-}*start, *end;
+} *friendHead, *friendTail;
+struct Requests{
+    char username[25];
+    Requests *next;
+};
 struct Account{
     char username[25];
     char password[25];
-    Friends *start;
+    Friends *friendHead;
+    Requests *reqHead;
     Account *next;
 } *head, *tail, *curr;
 struct Notes{
@@ -17,6 +24,8 @@ struct Notes{
     int privatecheck; // 1 = public , 0 = private
     Notes *next;
 } *head1;
+
+// #################################### CREATE NODES ####################################
 Notes *createNote(char *note)
 {
     Notes *temp = (Notes*)malloc(sizeof(Notes));
@@ -28,6 +37,7 @@ Account *createAcc(char *username, char *password){
     Account *temp = (Account*)malloc(sizeof(Account));
     strcpy(temp->username , username);
     strcpy(temp->password , password);
+    temp->reqHead = NULL;
     temp->next = NULL;
     return temp;
 }
@@ -37,30 +47,66 @@ Friends *createFriend(char *username){
     temp->next = NULL;
     return temp;
 }
-void pushAcc(char *username, char *password) {
-  Account *temp = createAcc(username, password);
-  if(!head) 
-  { 
-    head = tail = temp;
-  }
-  else 
-  {
-    tail->next = temp;
-    tail = temp; 
-  }
+Requests *createRequest(char *username){
+    Requests *temp = (Requests*)malloc(sizeof(Requests));
+    strcpy(temp->username , username);
+    temp->next = NULL;
+    return temp;
 }
-void pushFriends(char *username)
+// #################################### PRINT ALL'S ####################################
+
+void PrintUser()
 {
-    Friends *temp = createFriend(username);
-    if(!head) 
-    { 
-        start = end = temp;
-    } else 
-    { 
-        end->next = temp; 
-        end = temp; 
+    Account *curr = head;
+
+    printf("[All User]\n");
+    printf("No.     Username\n");
+    int i = 1;
+    while(curr != NULL)
+    {
+        printf("%2d     %s\n", i++, curr->username);
+        curr = curr->next;
     }
 }
+void PrintFriends(char *username)
+{
+    while(head != NULL)
+    {
+        if(strcmp(username, head->username) == 0)
+        {
+            int i = 1;
+            while(head->friendHead != NULL)
+            {
+                printf("%3d. %s\n", i++, head->friendHead->username);
+                head->friendHead->next;
+            }
+        }
+        head = head->next;
+    }
+}
+void PrintRequest(char *username){
+    Account *curr = head;
+
+    puts("[Friend Requests]");
+    puts("No.     Username");
+
+    while(curr)
+    {
+        if(strcmp(username, curr->username) == 0){
+        Requests *curr2 = curr->reqHead;
+            int i=1;
+            while(curr2){
+                printf("%2d     %s\n", i++, curr2->username);
+                curr2 = curr2->next;
+            }
+            return;
+        }
+        curr = curr->next;
+    }
+}
+
+// #################################### REGISTER & LOGIN ####################################
+
 int CheckUsername(char *username)
 {
     Account *curr = head;
@@ -89,42 +135,89 @@ int CheckLogin(char *username, char *password)
     }
     return 0; // aman boleh dipake
 }
-void PrintUser()
-{
+void pushAcc(char *username, char *password) {
+  Account *temp = createAcc(username, password);
+  if(!head) 
+  { 
+    head = tail = temp;
+  }
+  else 
+  {
+    tail->next = temp;
+    tail = temp; 
+  }
+}
+
+// #################################### ADD FRIEND REQUESTS ####################################
+
+int CheckRequest(char *sender, char *receiver){
     Account *curr = head;
 
-    printf("[All User]\n");
-    printf("No.     Username\n");
-    int i = 1;
-    while(curr != NULL)
-    {
-        printf("%2d     %s\n", i++, curr->username);
+    while(curr){
+        if(strcmp(receiver, curr->username) == 0){
+            Requests *curr2 = curr->reqHead;
+            while(curr2){
+                if(strcmp(sender, curr2->username) == 0){
+                    return 1;
+                }
+                curr2 = curr2->next;
+            }
+        }
+        curr = curr->next;
+    }
+
+    return 0;
+}
+
+void pushRequest(char *sender, char *receiver){
+    
+    Account *curr = head;
+
+    while(curr){
+        if(strcmp(receiver, curr->username) == 0){
+            Requests *temp = createRequest(sender);
+
+            if(!curr->reqHead) {  // ini push head
+                curr->reqHead = temp;
+            } else { 
+                temp->next = curr->reqHead;
+                curr->reqHead = temp;
+            }
+        }
         curr = curr->next;
     }
 }
-void PrintFriends(char *username)
+
+
+// #################################### FRIENDS ####################################
+
+void pushFriends(char *sender, char *receiver)
 {
-    while(head != NULL)
-    {
-        if(strcmp(username, head->username) == 0)
-        {
-            int i = 1;
-            while(head->start != NULL)
-            {
-                printf("%3d. %s\n", i++, head->start->username);
-                head->start->next;
+    Account *curr = head;
+
+    while(curr){
+        if(strcmp(receiver, curr->username) == 0){
+            Friends *curr2 = curr->friendHead;
+            Friends *temp = createFriend(sender);
+
+            if(!head) { 
+                curr2 = temp;
+            } else { 
+                temp->next = curr2;
+                curr2 = temp;
             }
         }
-        head = head->next;
+        curr = curr->next;
     }
 }
+
 void deleteFriend(char *username) 
 { 
-    if (start == NULL) 
+    if (friendHead == NULL) 
     {
         return; 
     }
-    struct Friends* temp = start, *prev; 
+    struct Friends* temp = friendHead, *prev; 
     while(temp != NULL && strcmp(temp->username, username) != 0)
     {
         prev = temp;
@@ -132,4 +225,5 @@ void deleteFriend(char *username)
     }
     prev->next = temp->next;
     free(temp); 
-} 
+}
+

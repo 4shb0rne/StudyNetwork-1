@@ -1,13 +1,16 @@
 #include "utils.h"
 
-char loggedIn[25];
-char loggedInTime[50];
+char loggedIn[25]; // user who is currently logged in
+char loggedInTime[50]; // the time the user log in
 
 void mainMenu();
 void loginMenu();
 void regis();
 void login();
 void logout();
+void addFriend();
+void viewInbox();
+void viewSent();
 
 void printLine(){
     puts("----------------------------");
@@ -88,12 +91,13 @@ void loginMenu(){
         printf(">> ");
         scanf("%d",&menu);
     }while(menu < 0 || menu > 6);
+        printLine();
 
     switch(menu){
-        case 1: break;
+        case 1: addFriend(); break;
         case 2: break;
-        case 3: break;
-        case 4: break;
+        case 3: viewInbox(); break;
+        case 4: viewSent(); break;
         case 5: break;
         case 6: logout(); break;
         case 0: loginMenu(); break;
@@ -148,7 +152,6 @@ void login(){
             printf("Try again [ 1 = yes / 0 = no] ? ");
             scanf("%d",&temp); getchar();
             if(temp != 1){
-                strcpy(loggedIn, username);
                 mainMenu();
             }
         }
@@ -160,6 +163,7 @@ void login(){
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
     strcpy(loggedInTime,asctime (timeinfo));
+    strcpy(loggedIn, username);
 
     loginMenu();
     return;
@@ -170,5 +174,62 @@ void logout(){
     strcpy(loggedInTime,"");
 
     mainMenu();
+}
+
+void addFriend(){
+    char username[25];
+    puts("");
+    PrintUser();
+    puts("");
+
+    printf("Which user do you want to add? [0 to cancel]\n");
+    do{
+        printf(">> ");
+        scanf("%s",username); getchar();
+
+        if(!CheckUsername(username)) puts("Invalid Username");
+    }while(!CheckUsername(username) && strcmp(username,"0")!=0);
+
+    if(CheckUsername(username)){
+        pushRequest(loggedIn,username);
+        puts("");
+        printf("-- Sent request to %s --\n",username);
+        printf("Press enter to continue");
+    }
+    getchar();
+
+    loginMenu();
+}
+
+void viewInbox(){
+    char username[25];
+    puts("");
+    PrintRequest(loggedIn);
+    puts("");
+    
+    do{
+        puts("Which user do you want to accept? [0 to go back]");
+        printf(">> ");
+        scanf("%s",username);
+
+        if(!CheckRequest(username, loggedIn)){
+            puts("Invalid username!");
+        }
+    }while(!CheckRequest(username, loggedIn) && strcmp(username,"0")!=0 && strcmp(username,loggedIn)!=0);
+
+    if(CheckRequest(username,loggedIn)){
+        pushFriends(username, loggedIn);
+
+        puts("");
+        printf("-- You and %s are now friends! --\n",username);
+        printf("Press enter to continue");
+        getchar();
+    }
+
+    loginMenu();
+}
+
+void viewSent(){
+    return;
 }
 
